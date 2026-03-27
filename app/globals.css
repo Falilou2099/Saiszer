@@ -1,0 +1,189 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Base ── */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #c9a84c #0a0a0a;
+}
+
+body {
+  cursor: none;
+  overflow-x: hidden;
+}
+
+/* ── Custom cursor ── */
+.cursor-dot,
+.cursor-ring {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s, height 0.2s, opacity 0.2s;
+}
+
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: #c9a84c;
+}
+
+.cursor-ring {
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid rgba(201, 168, 76, 0.5);
+  transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
+}
+
+.cursor-ring.hover {
+  width: 56px;
+  height: 56px;
+  border-color: rgba(201, 168, 76, 0.9);
+}
+
+/* ── Film grain overlay ── */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px 128px;
+}
+
+/* ── Reveal animation ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Project card video ── */
+.project-card video {
+  transition: transform 0.7s ease;
+}
+
+.project-card:hover video {
+  transform: scale(1.05);
+}
+
+/* ── Modal animations ── */
+@keyframes modal-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal-content-in {
+  from { opacity: 0; transform: translateY(30px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-modal-in {
+  animation: modal-in 0.3s ease-out;
+}
+
+.animate-modal-content-in {
+  animation: modal-content-in 0.4s ease-out 0.1s both;
+}
+
+/* ── Scrollbar (webkit) ── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c9a84c;
+  border-radius: 3px;
+}
+
+/* ── Link underline animation ── */
+.link-hover {
+  position: relative;
+}
+
+.link-hover::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: #c9a84c;
+  transition: width 0.3s ease;
+}
+
+.link-hover:hover::after {
+  width: 100%;
+}
+
+/* ── Hero fallback (animated gradient when video is missing) ── */
+.hero-fallback {
+  background: linear-gradient(
+    135deg,
+    #0a0a0a 0%,
+    #141414 25%,
+    #0f0d08 50%,
+    #0a0a0a 75%,
+    #111 100%
+  );
+  background-size: 400% 400%;
+  animation: hero-shift 12s ease-in-out infinite;
+}
+
+@keyframes hero-shift {
+  0%, 100% { background-position: 0% 50%; }
+  25% { background-position: 100% 0%; }
+  50% { background-position: 100% 100%; }
+  75% { background-position: 0% 100%; }
+}
+
+/* ── Card placeholder (subtle animated mesh when thumb is missing) ── */
+.card-placeholder {
+  background: linear-gradient(
+    160deg,
+    #0d0d0d 0%,
+    #151515 30%,
+    #0f0d08 60%,
+    #0d0d0d 100%
+  );
+  background-size: 300% 300%;
+  animation: card-shift 8s ease-in-out infinite;
+}
+
+@keyframes card-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ── Mobile: restore default cursor ── */
+@media (pointer: coarse) {
+  body {
+    cursor: auto;
+  }
+  .cursor-dot,
+  .cursor-ring {
+    display: none;
+  }
+}
