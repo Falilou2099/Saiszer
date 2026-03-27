@@ -7,14 +7,16 @@ import ProjectCard from "@/components/ProjectCard";
 import VideoModal from "@/components/VideoModal";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🎬 PROJETS — Modifie ce tableau pour mettre à jour tes projets
-// Mets tes vidéos dans /public/videos/ et tes miniatures dans /public/thumbs/
+// Video assets hosted on GitHub Releases CDN (original quality)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const VIDEO_BASE =
+  "https://github.com/Falilou2099/Saiszer/releases/download/v1.0-assets";
+
 const PROJECTS = [
   {
     title: "Baby Pluto",
     category: "3D Animation · Scene Design",
-    videoUrl: "/videos/Baby_Pluto_Scene_01_V02.mp4",
+    videoUrl: `${VIDEO_BASE}/Baby_Pluto_Scene_01_V02.mp4`,
     thumbUrl: "/thumbs/baby_pluto.jpg",
     client: "Personal Project",
     tools: "Blender, After Effects",
@@ -23,7 +25,7 @@ const PROJECTS = [
   {
     title: "RADAR",
     category: "3D Motion · VFX",
-    videoUrl: "/videos/RADAR_v02.mp4",
+    videoUrl: `${VIDEO_BASE}/RADAR_v02.mp4`,
     thumbUrl: "/thumbs/radar.jpg",
     client: "Personal Project",
     tools: "Blender, DaVinci Resolve",
@@ -32,7 +34,7 @@ const PROJECTS = [
   {
     title: "Sweden Remake",
     category: "3D Animation · Art Direction",
-    videoUrl: "/videos/Sweden_Remake_Final_V02.mp4",
+    videoUrl: `${VIDEO_BASE}/Sweden_Remake_Final_V02.mp4`,
     thumbUrl: "/thumbs/sweden_remake.jpg",
     client: "Personal Project",
     tools: "Blender, After Effects",
@@ -41,7 +43,7 @@ const PROJECTS = [
   {
     title: "Wanna Hear",
     category: "Motion Design · 3D",
-    videoUrl: "/videos/Wanna_hear_V02.mp4",
+    videoUrl: `${VIDEO_BASE}/Wanna_hear_V02.mp4`,
     thumbUrl: "/thumbs/wanna_hear.jpg",
     client: "Personal Project",
     tools: "Blender, Premiere Pro",
@@ -50,7 +52,7 @@ const PROJECTS = [
   {
     title: "Unlit",
     category: "3D Lighting · Rendering",
-    videoUrl: "/videos/unlit.mp4",
+    videoUrl: `${VIDEO_BASE}/unlit.mp4`,
     thumbUrl: "/thumbs/unlit.jpg",
     client: "Personal Project",
     tools: "Blender",
@@ -61,7 +63,7 @@ const PROJECTS = [
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Vidéo de fond du hero
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const HERO_VIDEO = "/videos/Baby_Pluto_Scene_01_V02.mp4";
+const HERO_VIDEO = `${VIDEO_BASE}/Baby_Pluto_Scene_01_V02.mp4`;
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Liens réseaux sociaux (remplace les # par tes vrais liens)
@@ -244,7 +246,7 @@ export default function Home() {
         <div className="relative h-[50vh] w-full overflow-hidden md:h-[60vh]">
           <video
             className="h-full w-full object-cover"
-            src="/videos/RADAR_v02.mp4"
+            src={`${VIDEO_BASE}/RADAR_v02.mp4`}
             autoPlay
             muted
             loop
