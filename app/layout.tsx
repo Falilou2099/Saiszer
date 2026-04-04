@@ -17,27 +17,37 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Saiszer — 3D Artist & Motion Designer",
+  title: {
+    default: "saiszer — Cinematic 3D Artist & Motion Designer",
+    template: "%s | saiszer",
+  },
   description:
-    "Portfolio de Saiszer, artiste 3D et motion designer. Créations visuelles cinématiques, animations 3D et direction artistique.",
+    "Cinematic 3D visuals, motion-led direction, and premium image-making for music, artists, and culture-forward projects.",
   keywords: [
+    "cinematic 3D artist",
     "3D artist",
     "motion designer",
     "portfolio",
+    "music visuals",
     "animation 3D",
     "VFX",
     "direction artistique",
   ],
+  applicationName: "saiszer",
+  category: "portfolio",
   openGraph: {
-    title: "Saiszer — 3D Artist & Motion Designer",
+    title: "saiszer — Cinematic 3D Artist & Motion Designer",
     description:
-      "Créations visuelles cinématiques, animations 3D et direction artistique.",
+      "Cinematic 3D visuals, motion-led direction, and premium visual storytelling for artists, music, and image-led worlds.",
     type: "website",
     locale: "fr_FR",
+    siteName: "saiszer",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Saiszer — 3D Artist & Motion Designer",
+    title: "saiszer — Cinematic 3D Artist & Motion Designer",
+    description:
+      "Cinematic 3D visuals and motion-led direction for music, artists, and culture-forward collaborations.",
   },
   robots: "index, follow",
 };

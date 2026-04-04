@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Tokens ── */
+:root {
+  --bg: #050505;
+  --bg-soft: #0d0d0f;
+  --bg-elevated: #141316;
+  --panel: rgba(255, 255, 255, 0.04);
+  --panel-strong: rgba(255, 255, 255, 0.08);
+  --text-main: rgba(255, 252, 246, 0.96);
+  --text-soft: rgba(235, 227, 214, 0.74);
+  --text-muted: rgba(192, 184, 172, 0.58);
+  --accent: #c9a84c;
+  --accent-bright: #e4c982;
+  --accent-soft: rgba(201, 168, 76, 0.16);
+  --accent-haze: rgba(201, 168, 76, 0.08);
+}
+
 /* ── Base ── */
 * {
   margin: 0;
@@ -12,12 +28,57 @@
 html {
   scroll-behavior: smooth;
   scrollbar-width: thin;
-  scrollbar-color: #c9a84c #0a0a0a;
+  scrollbar-color: var(--accent) var(--bg);
+  background: var(--bg);
+}
+
+html::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(circle at top, rgba(201, 168, 76, 0.12), transparent 28%),
+    radial-gradient(circle at 18% 22%, rgba(255, 255, 255, 0.045), transparent 24%),
+    linear-gradient(180deg, #040404 0%, #090909 24%, #070707 58%, #040404 100%);
+  pointer-events: none;
 }
 
 body {
+  position: relative;
+  isolation: isolate;
   cursor: none;
   overflow-x: hidden;
+  min-height: 100vh;
+  color: var(--text-main);
+  background:
+    radial-gradient(circle at top, rgba(201, 168, 76, 0.06), transparent 24%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent 18%),
+    transparent;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+body::before {
+  z-index: -2;
+  background:
+    radial-gradient(circle at 50% -12%, rgba(201, 168, 76, 0.16), transparent 30%),
+    radial-gradient(circle at 82% 18%, rgba(255, 255, 255, 0.045), transparent 18%);
+  opacity: 0.85;
+}
+
+body::after {
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 12%, transparent 88%, rgba(255, 255, 255, 0.012)),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.01), transparent 16%, transparent 84%, rgba(255, 255, 255, 0.01));
+  opacity: 0.7;
 }
 
 /* ── Custom cursor ── */
@@ -36,7 +97,8 @@ body {
 .cursor-dot {
   width: 6px;
   height: 6px;
-  background: #c9a84c;
+  background: var(--accent-bright);
+  box-shadow: 0 0 18px rgba(201, 168, 76, 0.45);
 }
 
 .cursor-ring {
@@ -52,16 +114,17 @@ body {
   border-color: rgba(201, 168, 76, 0.9);
 }
 
-/* ── Film grain overlay ── */
+/* ── Film grain overlay (sous la nav z-100 et la modale z-[250] — évite de masquer l’UI) ── */
 .grain {
   position: fixed;
   inset: 0;
-  z-index: 9000;
+  z-index: 15;
   pointer-events: none;
-  opacity: 0.04;
+  opacity: 0.055;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 128px 128px;
+  mix-blend-mode: soft-light;
 }
 
 /* ── Reveal animation ── */
@@ -76,13 +139,61 @@ body {
   transform: translateY(0);
 }
 
-/* ── Project card video ── */
-.project-card video {
+section,
+header,
+main,
+footer {
+  position: relative;
+}
+
+section::before,
+header::before,
+footer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 18%, transparent 82%, rgba(255, 255, 255, 0.012));
+  opacity: 0.7;
+}
+
+/* ── Project card média ── */
+.project-card video,
+.project-card img {
   transition: transform 0.7s ease;
 }
 
 .project-card:hover video {
   transform: scale(1.05);
+}
+
+.project-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 24%, transparent 58%, rgba(0, 0, 0, 0.72) 100%),
+    radial-gradient(circle at top, rgba(201, 168, 76, 0.08), transparent 38%);
+  opacity: 0.95;
+}
+
+/*
+ * Accélération GPU sans écraser transform (translate centrage hero, etc.).
+ */
+.video-layer-gpu {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Hero : vidéo plein conteneur, centrage média (object-fit) */
+.hero-video-cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 /* ── Modal animations ── */
@@ -142,11 +253,11 @@ body {
 .hero-fallback {
   background: linear-gradient(
     135deg,
-    #0a0a0a 0%,
-    #141414 25%,
-    #0f0d08 50%,
-    #0a0a0a 75%,
-    #111 100%
+    #060606 0%,
+    #121214 24%,
+    #120f08 52%,
+    #080808 76%,
+    #101012 100%
   );
   background-size: 400% 400%;
   animation: hero-shift 12s ease-in-out infinite;
@@ -163,10 +274,10 @@ body {
 .card-placeholder {
   background: linear-gradient(
     160deg,
-    #0d0d0d 0%,
-    #151515 30%,
-    #0f0d08 60%,
-    #0d0d0d 100%
+    #0b0b0c 0%,
+    #151417 32%,
+    #110e08 62%,
+    #0b0b0c 100%
   );
   background-size: 300% 300%;
   animation: card-shift 8s ease-in-out infinite;
@@ -177,6 +288,69 @@ body {
   50% { background-position: 100% 50%; }
 }
 
+/* ── Mobile fullscreen menu ── */
+.mobile-menu {
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  background:
+    linear-gradient(180deg, rgba(5, 5, 5, 0.92), rgba(5, 5, 5, 0.98)),
+    radial-gradient(circle at top, rgba(201, 168, 76, 0.12), transparent 38%);
+}
+
+.mobile-menu.open {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.mobile-menu-atmosphere {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at top, rgba(201, 168, 76, 0.15), transparent 34%),
+    radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.04), transparent 24%),
+    linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.02), transparent);
+  opacity: 0;
+  transform: scale(1.04);
+  transition: opacity 0.5s ease, transform 0.6s ease;
+}
+
+.mobile-menu.open .mobile-menu-atmosphere {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.mobile-menu-link {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.4s ease, transform 0.4s ease, color 0.2s ease;
+}
+
+.mobile-menu.open .mobile-menu-link {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.mobile-menu-kicker,
+.mobile-menu-copy,
+.mobile-menu-socials {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+.mobile-menu.open .mobile-menu-kicker,
+.mobile-menu.open .mobile-menu-copy,
+.mobile-menu.open .mobile-menu-socials {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.mobile-menu-socials {
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 /* ── Mobile: restore default cursor ── */
 @media (pointer: coarse) {
   body {
@@ -185,5 +359,52 @@ body {
   .cursor-dot,
   .cursor-ring {
     display: none;
+  }
+}
+
+/* ── Mobile project card tap feedback ── */
+@media (hover: none) {
+  .project-card:active video,
+  .project-card:active img {
+    transform: scale(1.03);
+  }
+  .project-card:active .card-border-accent {
+    border-color: rgba(201, 168, 76, 0.3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal,
+  .mobile-menu-link,
+  .mobile-menu-kicker,
+  .mobile-menu-copy,
+  .mobile-menu-socials,
+  .mobile-menu-atmosphere {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── Mobile scrollbar hide for cleaner look ── */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 0;
+    display: none;
+  }
+  html {
+    scrollbar-width: none;
   }
 }
