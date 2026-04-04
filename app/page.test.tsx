@@ -73,6 +73,11 @@ describe("Home", () => {
     const videos = Array.from(container.querySelectorAll("video"));
 
     expect(videos.some((video) => video.getAttribute("src")?.includes("/videos/"))).toBe(true);
+    expect(
+      videos.filter(
+        (video) => video.getAttribute("src") === "/videos/Baby_Pluto_Scene_01_V02.mp4"
+      )
+    ).toHaveLength(1);
 
     await user.click(screen.getByRole("button", { name: /Voir RADAR/i }));
 

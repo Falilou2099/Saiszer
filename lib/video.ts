@@ -9,7 +9,7 @@ export interface AmbientPreloadInput {
 
 export function getAmbientPreload({ kind, inView }: AmbientPreloadInput): AmbientVideoPreload {
   if (kind === "hero") {
-    return "auto";
+    return "metadata";
   }
 
   return inView ? "metadata" : "none";
@@ -29,4 +29,20 @@ export function shouldAutoplayAmbientVideo({
   prefersReducedMotion,
 }: ShouldAutoplayAmbientVideoInput): boolean {
   return visible && allowed && !pausedExternally && !prefersReducedMotion;
+}
+
+export interface ShouldAutoplayPreviewVideoInput {
+  visible: boolean;
+  previewActive: boolean;
+  pausedExternally: boolean;
+  prefersReducedMotion: boolean;
+}
+
+export function shouldAutoplayPreviewVideo({
+  visible,
+  previewActive,
+  pausedExternally,
+  prefersReducedMotion,
+}: ShouldAutoplayPreviewVideoInput): boolean {
+  return visible && previewActive && !pausedExternally && !prefersReducedMotion;
 }

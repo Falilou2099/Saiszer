@@ -260,11 +260,14 @@ export default function Home() {
                   className="group block w-full text-left"
                 >
                   <div className="relative aspect-[16/10] overflow-hidden rounded-sm">
-                    <VideoBackground
-                      src={heroProject.videoSrc}
-                      poster={heroProject.thumbUrl}
-                      pausedExternally={modalOpen}
+                    <img
+                      src={heroProject.thumbUrl}
+                      alt=""
+                      className="absolute inset-0 z-0 h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+                      loading="lazy"
+                      decoding="async"
                     />
+                    <div className="absolute inset-0 z-[1] bg-gradient-to-b from-bg/40 via-bg/10 to-bg/70" />
                     <div className="absolute inset-x-0 bottom-0 z-[2] bg-gradient-to-t from-black via-black/35 to-transparent p-5 sm:p-6">
                       <p className="font-mono text-[9px] uppercase tracking-[0.28em] text-accent sm:text-[10px]">
                         Featured piece

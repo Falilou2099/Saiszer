@@ -1,9 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { getAmbientPreload, shouldAutoplayAmbientVideo } from "@/lib/video";
+import {
+  getAmbientPreload,
+  shouldAutoplayAmbientVideo,
+  shouldAutoplayPreviewVideo,
+} from "@/lib/video";
 
 describe("video helpers", () => {
-  it("uses auto preload for the hero video", () => {
-    expect(getAmbientPreload({ kind: "hero", inView: true })).toBe("auto");
+  it("uses metadata preload for the hero video to avoid eager full downloads", () => {
+    expect(getAmbientPreload({ kind: "hero", inView: true })).toBe("metadata");
   });
 
   it("uses metadata preload for ambient videos in view", () => {
@@ -61,5 +65,25 @@ describe("video helpers", () => {
         prefersReducedMotion: false,
       })
     ).toBe(false);
+  });
+
+  it("only autoplays preview videos when the card is actively engaged", () => {
+    expect(
+      shouldAutoplayPreviewVideo({
+        visible: true,
+        previewActive: false,
+        pausedExternally: false,
+        prefersReducedMotion: false,
+      })
+    ).toBe(false);
+
+    expect(
+      shouldAutoplayPreviewVideo({
+        visible: true,
+        previewActive: true,
+        pausedExternally: false,
+        prefersReducedMotion: false,
+      })
+    ).toBe(true);
   });
 });

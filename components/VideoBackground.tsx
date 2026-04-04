@@ -18,17 +18,6 @@ export default function VideoBackground({
   const [videoError, setVideoError] = useState(false);
 
   useEffect(() => {
-    const v = videoRef.current;
-    if (v) {
-      try {
-        v.setAttribute("fetchpriority", "high");
-      } catch {
-        /* ignore */
-      }
-    }
-  }, []);
-
-  useEffect(() => {
     const video = videoRef.current;
     if (!video || videoError) return;
 

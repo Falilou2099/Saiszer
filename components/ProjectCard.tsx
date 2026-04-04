@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect, useCallback } from "react";
-import { getAmbientPreload, shouldAutoplayAmbientVideo } from "@/lib/video";
+import { getAmbientPreload, shouldAutoplayPreviewVideo } from "@/lib/video";
 
 interface ProjectCardProps {
   title: string;
@@ -23,6 +23,7 @@ export default function ProjectCard({
   const cardRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [isPreviewActive, setIsPreviewActive] = useState(false);
   const [videoError, setVideoError] = useState(false);
 
   useEffect(() => {
@@ -46,9 +47,9 @@ export default function ProjectCard({
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const shouldPlay = shouldAutoplayAmbientVideo({
+    const shouldPlay = shouldAutoplayPreviewVideo({
       visible: isVisible,
-      allowed: true,
+      previewActive: isPreviewActive,
       pausedExternally,
       prefersReducedMotion: reduceMotion,
     });
@@ -60,7 +61,7 @@ export default function ProjectCard({
 
     video.muted = true;
     video.play().catch(() => {});
-  }, [isVisible, videoError, pausedExternally]);
+  }, [isPreviewActive, isVisible, videoError, pausedExternally]);
 
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
@@ -80,7 +81,10 @@ export default function ProjectCard({
     [onClick]
   );
 
-  const preload = getAmbientPreload({ kind: "ambient", inView: isVisible && !pausedExternally });
+  const preload = getAmbientPreload({
+    kind: "ambient",
+    inView: isVisible && isPreviewActive && !pausedExternally,
+  });
 
   return (
     <div
@@ -89,6 +93,10 @@ export default function ProjectCard({
       tabIndex={0}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
+      onMouseEnter={() => setIsPreviewActive(true)}
+      onMouseLeave={() => setIsPreviewActive(false)}
+      onFocus={() => setIsPreviewActive(true)}
+      onBlur={() => setIsPreviewActive(false)}
       aria-label={`Voir ${title}`}
       className="project-card group relative block aspect-[16/10] w-full cursor-pointer overflow-hidden rounded-sm border-0 bg-neutral-900/50 text-left outline-none ring-accent/40 focus-visible:ring-2 sm:aspect-[16/10]"
     >
