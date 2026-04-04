@@ -8,8 +8,3 @@ next-env.d.ts
 .env.local
 .vercel
 swisstransfer_*.zip
-
-# Videos hosted on GitHub Releases CDN
-public/videos/*.mp4
-public/videos/*.mov
-public/videos/*.webm
