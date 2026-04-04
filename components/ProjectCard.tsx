@@ -1,41 +1,37 @@
 "use client";
 
 import { useRef, useState, useEffect, useCallback } from "react";
+import { getAmbientPreload, shouldAutoplayAmbientVideo } from "@/lib/video";
 
 interface ProjectCardProps {
   title: string;
   category: string;
-  videoUrl: string;
+  videoSrc: string;
   thumbUrl: string;
   onClick: () => void;
+  pausedExternally?: boolean;
 }
 
 export default function ProjectCard({
   title,
   category,
-  videoUrl,
+  videoSrc,
   thumbUrl,
   onClick,
+  pausedExternally = false,
 }: ProjectCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [videoError, setVideoError] = useState(false);
 
-  const isDirectVideo =
-    videoUrl.endsWith(".mp4") ||
-    videoUrl.endsWith(".webm") ||
-    videoUrl.endsWith(".mov");
-
   useEffect(() => {
     const card = cardRef.current;
     if (!card) return;
 
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting);
-      },
-      { threshold: 0.3 }
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { threshold: 0.25, rootMargin: "48px 0px" }
     );
 
     observer.observe(card);
@@ -44,15 +40,27 @@ export default function ProjectCard({
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || !isDirectVideo || videoError) return;
+    if (!video || videoError) return;
 
-    if (isVisible) {
-      video.currentTime = 0;
-      video.play().catch(() => setVideoError(true));
-    } else {
+    const reduceMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const shouldPlay = shouldAutoplayAmbientVideo({
+      visible: isVisible,
+      allowed: true,
+      pausedExternally,
+      prefersReducedMotion: reduceMotion,
+    });
+
+    if (!shouldPlay) {
       video.pause();
+      return;
     }
-  }, [isVisible, isDirectVideo, videoError]);
+
+    video.muted = true;
+    video.play().catch(() => {});
+  }, [isVisible, videoError, pausedExternally]);
 
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
@@ -62,61 +70,63 @@ export default function ProjectCard({
     [onClick]
   );
 
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        onClick();
+      }
+    },
+    [onClick]
+  );
+
+  const preload = getAmbientPreload({ kind: "ambient", inView: isVisible && !pausedExternally });
+
   return (
     <div
       ref={cardRef}
+      role="button"
+      tabIndex={0}
       onClick={handleClick}
-      className="project-card group relative block aspect-[16/10] cursor-pointer overflow-hidden bg-neutral-900/50"
+      onKeyDown={handleKeyDown}
+      aria-label={`Voir ${title}`}
+      className="project-card group relative block aspect-[16/10] w-full cursor-pointer overflow-hidden rounded-sm border-0 bg-neutral-900/50 text-left outline-none ring-accent/40 focus-visible:ring-2 sm:aspect-[16/10]"
     >
-      {/* Video layer — plays on scroll */}
-      {isDirectVideo && !videoError && (
+      {!videoError ? (
         <video
           ref={videoRef}
-          className="absolute inset-0 z-0 h-full w-full object-cover"
-          src={videoUrl}
+          className="video-layer-gpu pointer-events-none absolute inset-0 z-0 h-full w-full object-cover object-center"
+          src={videoSrc}
           muted
           loop
           playsInline
-          preload="metadata"
+          preload={preload}
           poster={thumbUrl || undefined}
+          disablePictureInPicture
           onError={() => setVideoError(true)}
         />
-      )}
-
-      {/* Static fallback if video fails */}
-      {(!isDirectVideo || videoError) && thumbUrl && (
+      ) : thumbUrl ? (
         <img
           src={thumbUrl}
-          alt={title}
-          className="absolute inset-0 z-0 h-full w-full object-cover"
+          alt=""
+          className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
           loading="lazy"
+          decoding="async"
         />
+      ) : (
+        <div className="absolute inset-0 z-0 bg-neutral-950" aria-hidden />
       )}
 
-      {/* Hover zoom effect */}
-      <div className="pointer-events-none absolute inset-0 z-10 transition-transform duration-700 group-hover:scale-105" />
-
-      {/* Info overlay */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-bg/90 via-bg/40 to-transparent p-6 pt-20">
-        <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.25em] text-accent">
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-bg/90 via-bg/40 to-transparent p-4 pt-16 sm:p-6 sm:pt-20">
+        <p className="mb-0.5 font-mono text-[8px] uppercase tracking-[0.2em] text-accent sm:mb-1 sm:text-[10px] sm:tracking-[0.25em]">
           {category}
         </p>
-        <h3 className="font-display text-xl font-light tracking-wide text-white md:text-2xl">
+        <h3 className="pointer-events-none font-display text-lg font-light tracking-wide text-white sm:text-xl md:text-2xl">
           {title}
         </h3>
       </div>
 
-      {/* Hover border accent */}
-      <div className="pointer-events-none absolute inset-0 z-30 border border-transparent transition-colors duration-500 group-hover:border-accent/20" />
-
-      {/* Clickable overlay */}
-      <div
-        className="absolute inset-0 z-40 cursor-pointer"
-        onClick={handleClick}
-        role="button"
-        tabIndex={0}
-        aria-label={`Voir ${title}`}
-      />
+      <div className="card-border-accent pointer-events-none absolute inset-0 z-30 border border-transparent transition-colors duration-500 group-hover:border-accent/20" />
     </div>
   );
 }
