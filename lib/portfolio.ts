@@ -11,6 +11,12 @@ type PortfolioProjectFields = {
 
 export type PortfolioProject = Readonly<PortfolioProjectFields>;
 
+const VIDEO_ASSET_VERSION = "20260405-2";
+
+function versionVideoSrc(path: string): string {
+  return `${path}?v=${VIDEO_ASSET_VERSION}`;
+}
+
 function freezeProject(project: PortfolioProjectFields): PortfolioProject {
   return Object.freeze(project);
 }
@@ -19,7 +25,7 @@ const projectItems = [
   freezeProject({
     title: "Baby Pluto",
     category: "3D Animation · Scene Design",
-    videoSrc: "/videos/Baby_Pluto_Scene_01_V02.mp4",
+    videoSrc: versionVideoSrc("/videos/Baby_Pluto_Scene_01_V02.mp4"),
     thumbUrl: "/thumbs/baby_pluto.jpg",
     client: "Personal Project",
     tools: "Blender, After Effects",
@@ -29,7 +35,7 @@ const projectItems = [
   freezeProject({
     title: "RADAR",
     category: "3D Motion · VFX",
-    videoSrc: "/videos/RADAR_v02.mp4",
+    videoSrc: versionVideoSrc("/videos/RADAR_v02.mp4"),
     thumbUrl: "/thumbs/radar.jpg",
     client: "Personal Project",
     tools: "Blender, DaVinci Resolve",
@@ -39,7 +45,7 @@ const projectItems = [
   freezeProject({
     title: "Sweden Remake",
     category: "3D Animation · Art Direction",
-    videoSrc: "/videos/Sweden_Remake_Final_V02.mp4",
+    videoSrc: versionVideoSrc("/videos/Sweden_Remake_Final_V02.mp4"),
     thumbUrl: "/thumbs/sweden_remake.jpg",
     client: "Personal Project",
     tools: "Blender, After Effects",
@@ -49,7 +55,7 @@ const projectItems = [
   freezeProject({
     title: "Wanna Hear",
     category: "Motion Design · 3D",
-    videoSrc: "/videos/Wanna_hear_V02.mp4",
+    videoSrc: versionVideoSrc("/videos/Wanna_hear_V02.mp4"),
     thumbUrl: "/thumbs/wanna_hear.jpg",
     client: "Personal Project",
     tools: "Blender, Premiere Pro",
@@ -59,7 +65,7 @@ const projectItems = [
   freezeProject({
     title: "Unlit",
     category: "3D Lighting · Rendering",
-    videoSrc: "/videos/unlit.mp4",
+    videoSrc: versionVideoSrc("/videos/unlit.mp4"),
     thumbUrl: "/thumbs/unlit.jpg",
     client: "Personal Project",
     tools: "Blender",

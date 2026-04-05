@@ -2,6 +2,7 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import Home from "@/app/page";
+import { heroProject } from "@/lib/portfolio";
 
 class MockIntersectionObserver {
   observe() {}
@@ -74,9 +75,7 @@ describe("Home", () => {
 
     expect(videos.some((video) => video.getAttribute("src")?.includes("/videos/"))).toBe(true);
     expect(
-      videos.filter(
-        (video) => video.getAttribute("src") === "/videos/Baby_Pluto_Scene_01_V02.mp4"
-      )
+      videos.filter((video) => video.getAttribute("src") === heroProject.videoSrc)
     ).toHaveLength(1);
 
     await user.click(screen.getByRole("button", { name: /Voir RADAR/i }));

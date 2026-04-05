@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { aboutProject, heroProject, projects, socials } from "@/lib/portfolio";
 
 function publicPath(assetPath: string): string {
-  return join(process.cwd(), "public", assetPath.replace(/^\//, ""));
+  return join(process.cwd(), "public", assetPath.replace(/^\//, "").split("?")[0]);
 }
 
 describe("portfolio data", () => {
@@ -14,7 +14,7 @@ describe("portfolio data", () => {
 
     for (const project of projects) {
       expect(project.videoSrc.startsWith("/videos/")).toBe(true);
-      expect(project.videoSrc.endsWith(".mp4")).toBe(true);
+      expect(project.videoSrc).toContain(".mp4?v=");
       expect(project.thumbUrl.startsWith("/thumbs/")).toBe(true);
       expect(existsSync(publicPath(project.videoSrc))).toBe(true);
       expect(existsSync(publicPath(project.thumbUrl))).toBe(true);
