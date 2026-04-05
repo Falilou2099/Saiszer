@@ -67,20 +67,10 @@ describe("video helpers", () => {
     ).toBe(false);
   });
 
-  it("only autoplays preview videos when the card is actively engaged", () => {
+  it("autoplays preview videos as soon as the card is visible", () => {
     expect(
       shouldAutoplayPreviewVideo({
         visible: true,
-        previewActive: false,
-        pausedExternally: false,
-        prefersReducedMotion: false,
-      })
-    ).toBe(false);
-
-    expect(
-      shouldAutoplayPreviewVideo({
-        visible: true,
-        previewActive: true,
         pausedExternally: false,
         prefersReducedMotion: false,
       })

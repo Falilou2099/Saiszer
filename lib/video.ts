@@ -33,16 +33,14 @@ export function shouldAutoplayAmbientVideo({
 
 export interface ShouldAutoplayPreviewVideoInput {
   visible: boolean;
-  previewActive: boolean;
   pausedExternally: boolean;
   prefersReducedMotion: boolean;
 }
 
 export function shouldAutoplayPreviewVideo({
   visible,
-  previewActive,
   pausedExternally,
   prefersReducedMotion,
 }: ShouldAutoplayPreviewVideoInput): boolean {
-  return visible && previewActive && !pausedExternally && !prefersReducedMotion;
+  return visible && !pausedExternally && !prefersReducedMotion;
 }
